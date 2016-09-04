@@ -125,14 +125,14 @@ IB_DESIGNABLE
  *
  *  数据源
  */
-@property (nonatomic, weak) id<JJCyclePageViewDataSource> dataSource;
+@property (nonatomic, weak) IBOutlet id<JJCyclePageViewDataSource> dataSource;
 
 /**
  *  @author 蔚哥哥, 16-09-03 22:09:14
  *
  *  代理
  */
-@property (nonatomic, weak) id<JJCyclePageViewDelegate> delegate;
+@property (nonatomic, weak) IBOutlet id<JJCyclePageViewDelegate> delegate;
 
 /**
  *  @author 蔚哥哥, 16-09-03 22:09:18

@@ -59,8 +59,8 @@
 #pragma mark - Private
 - (void)configPageView
 {
-    _pageView.dataSource = self;
-    _pageView.delegate = self;
+//    _pageView.dataSource = self;
+//    _pageView.delegate = self;
     [_pageView registerCellWithNib:[UINib nibWithNibName:NSStringFromClass([CollectionViewCell class]) bundle:[NSBundle mainBundle]] identifier:@"cell"];
     [_pageView registerCellWithNib:[UINib nibWithNibName:NSStringFromClass([OtherCollectionViewCell class]) bundle:[NSBundle mainBundle]] identifier:@"otherCell"];
 //    _pageView.scrollDirection = JJCyclePageViewScrollDirectionVertical;
