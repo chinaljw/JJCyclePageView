@@ -35,9 +35,6 @@
     
 //    [self.view addSubview:self.pageView];
     
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [_pageView scrollToIndex:4 animated:YES];
-//    });
     [self configPageView];
     
 }
@@ -108,7 +105,7 @@
 
 - (void)didSelectItemAtIndex:(NSUInteger)index
 {
-//    NSLog(@"select index %lul", index);
+    NSLog(@"select index %lul", index);
 }
 
 #pragma mark - Actions

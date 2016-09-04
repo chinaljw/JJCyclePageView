@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JJCyclePageView/ViewController.m"
-            timestampString = "494669009.53961"
+            timestampString = "494670060.224678"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "-didClickReloadButton:"
             landmarkType = "5">
          </BreakpointContent>

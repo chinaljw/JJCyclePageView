@@ -138,12 +138,12 @@
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="pagingEnabled" value="YES"/>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="scrollAbleWhenOneCell" value="NO"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="scrollAbleWhenOneCell" value="YES"/>
                                     <userDefinedRuntimeAttribute type="number" keyPath="autoScrollTimeInterval">
                                         <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="shouldAutoScroll" value="YES"/>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="scrollEnabled" value="NO"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="scrollEnabled" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
