@@ -48,7 +48,7 @@
             </objects>
             <point key="canvasLocation" x="-2225" y="258"/>
         </scene>
-        <!--View Controller-->
+        <!--Data Source-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
@@ -146,6 +146,10 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="scrollEnabled" value="YES"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="shouldScrollForever" value="YES"/>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="DcE-wv-yOg"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="ynF-65-cVb"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
