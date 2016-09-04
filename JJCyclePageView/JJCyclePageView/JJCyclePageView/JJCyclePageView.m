@@ -235,13 +235,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 //根据pageIndex获取对应offset，区分滚动方向
 - (CGPoint)contentOffsetForIndex:(NSUInteger)index
 {
-    return self.scrollDirection == JJCyclePageViewScrollDirectionHorizontal ? CGPointMake(index * self.bounds.size.width, 0.f) : CGPointMake(0.f, index * self.bounds.size.height);
-}
-
-//获取单位长度，区分滚动方向
-- (CGFloat)unitLength
-{
-    return self.scrollDirection == JJCyclePageViewScrollDirectionHorizontal ? self.bounds.size.width : self.bounds.size.height;
+    return self.scrollDirection == JJCyclePageViewScrollDirectionHorizontal ? CGPointMake(index * [self boundsWidth], 0.f) : CGPointMake(0.f, index * [self boundsHeight]);
 }
 
 //根据真实的index获取输出到外部的index
@@ -253,7 +247,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 //根据offset获取真实的index，区分滚动方向
 - (NSUInteger)realIndexForContentOffset:(CGPoint)contentOffset
 {
-    return self.scrollDirection == JJCyclePageViewScrollDirectionHorizontal ? contentOffset.x / self.bounds.size.width : contentOffset.y / self.bounds.size.height;
+    return self.scrollDirection == JJCyclePageViewScrollDirectionHorizontal ? contentOffset.x / [self boundsWidth] : contentOffset.y / [self boundsHeight];
 }
 
 //单位宽
