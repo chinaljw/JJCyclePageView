@@ -13,7 +13,7 @@
 
 @interface ViewController () <JJCyclePageViewDataSource, JJCyclePageViewDelegate>
 
-@property (nonatomic, strong) JJCyclePageView *pageView;
+@property (nonatomic, strong) IBOutlet JJCyclePageView *pageView;
 
 @property (nonatomic, strong) NSArray *colorList;
 
@@ -33,12 +33,12 @@
                        [UIColor grayColor],
                        ];
     
-    [self.view addSubview:self.pageView];
+//    [self.view addSubview:self.pageView];
     
 //    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //        [_pageView scrollToIndex:4 animated:YES];
 //    });
-    
+    [self configPageView];
     
 }
 
@@ -48,24 +48,29 @@
 }
 
 #pragma mark - Setter & Getter
-- (JJCyclePageView *)pageView
+//- (JJCyclePageView *)pageView
+//{
+//    if (!_pageView) {
+//        CGRect frame = self.view.bounds;
+//        frame.size.height = frame.size.width * 9 / 16;
+//        frame.origin.y = 200.f;
+//        _pageView = [[JJCyclePageView alloc] initWithFrame:frame];
+//    }
+//    return _pageView;
+//}
+
+#pragma mark - Private
+- (void)configPageView
 {
-    if (!_pageView) {
-        CGRect frame = self.view.bounds;
-        frame.size.height = frame.size.width * 9 / 16;
-        frame.origin.y = 200.f;
-        _pageView = [[JJCyclePageView alloc] initWithFrame:frame];
-        _pageView.dataSource = self;
-        _pageView.delegate = self;
-        [_pageView registerCellWithNib:[UINib nibWithNibName:NSStringFromClass([CollectionViewCell class]) bundle:[NSBundle mainBundle]] identifier:@"cell"];
-        [_pageView registerCellWithNib:[UINib nibWithNibName:NSStringFromClass([OtherCollectionViewCell class]) bundle:[NSBundle mainBundle]] identifier:@"otherCell"];
-        _pageView.scrollDirection = JJCyclePageViewScrollDirectionVertical;
-        _pageView.scrollAbleWhenOneCell = YES;
-        _pageView.shouldAutoScroll = YES;
-        _pageView.autoScrollTimeInterval = 1.f;
-        _pageView.autoScrollDirection = JJCyclePageViewAutoScrollDirectionDescending;
-    }
-    return _pageView;
+    _pageView.dataSource = self;
+    _pageView.delegate = self;
+    [_pageView registerCellWithNib:[UINib nibWithNibName:NSStringFromClass([CollectionViewCell class]) bundle:[NSBundle mainBundle]] identifier:@"cell"];
+    [_pageView registerCellWithNib:[UINib nibWithNibName:NSStringFromClass([OtherCollectionViewCell class]) bundle:[NSBundle mainBundle]] identifier:@"otherCell"];
+//    _pageView.scrollDirection = JJCyclePageViewScrollDirectionVertical;
+//    _pageView.scrollAbleWhenOneCell = YES;
+//    _pageView.shouldAutoScroll = YES;
+//    _pageView.autoScrollTimeInterval = .0f;
+//    _pageView.autoScrollDirection = JJCyclePageViewAutoScrollDirectionDescending;
 }
 
 #pragma mark - JJCyclePageViewDataSource

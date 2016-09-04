@@ -34,6 +34,15 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 
 @implementation JJCyclePageView
 
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        [self initSelf];
+    }
+    return self;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -151,7 +160,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     return _timer;
 }
 
-- (void)setAutoScrollTimeInterval:(NSTimeInterval)autoScrollTimeInterval
+- (void)setAutoScrollTimeInterval:(CGFloat)autoScrollTimeInterval
 {
     _autoScrollTimeInterval = autoScrollTimeInterval;
     if ([self canAutoScroll]) {
@@ -291,7 +300,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 - (BOOL)canAutoScroll
 {
     //要自动滚 & 出现在window上 & 能滚
-    return self.shouldAutoScroll && self.window && [self canScroll];
+    return self.shouldAutoScroll && self.window && [self canScroll] && self.autoScrollTimeInterval != 0;
 }
 
 //重启自动滚动

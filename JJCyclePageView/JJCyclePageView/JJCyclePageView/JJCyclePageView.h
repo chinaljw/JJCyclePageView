@@ -116,6 +116,7 @@ typedef NS_ENUM(NSInteger, JJCyclePageViewAutoScrollDirection) {
 
 @end
 
+IB_DESIGNABLE
 @interface JJCyclePageView : UIView
 
 /**
@@ -144,14 +145,14 @@ typedef NS_ENUM(NSInteger, JJCyclePageViewAutoScrollDirection) {
  *
  *  是否分页，默认YES
  */
-@property (nonatomic, assign) BOOL pagingEnabled;
+@property (nonatomic, assign) IBInspectable BOOL pagingEnabled;
 
 /**
  *  @author 蔚哥哥, 16-09-03 17:09:17
  *
  *  只有一个cell时是否能滚动，默认YES（设置后会重新加载数据）
  */
-@property (nonatomic, assign) BOOL scrollAbleWhenOneCell;
+@property (nonatomic, assign) IBInspectable BOOL scrollAbleWhenOneCell;
 
 /**
  *  @author 蔚哥哥, 16-09-03 20:09:15
@@ -165,7 +166,7 @@ typedef NS_ENUM(NSInteger, JJCyclePageViewAutoScrollDirection) {
  *
  *  是否自动滚动，默认NO
  */
-@property (nonatomic, assign) BOOL shouldAutoScroll;
+@property (nonatomic, assign) IBInspectable BOOL shouldAutoScroll;
 
 /**
  *  @author 蔚哥哥, 16-09-03 20:09:57
@@ -179,14 +180,14 @@ typedef NS_ENUM(NSInteger, JJCyclePageViewAutoScrollDirection) {
  *
  *  自动滚动的时间间隔，默认3秒
  */
-@property (nonatomic, assign) NSTimeInterval autoScrollTimeInterval;
+@property (nonatomic, assign) IBInspectable CGFloat autoScrollTimeInterval;
 
 /**
  *  @author 蔚哥哥, 16-09-04 13:09:31
  *
  *  是否能人为滚动，默认YES
  */
-@property (nonatomic, assign) BOOL scrollEnabled;
+@property (nonatomic, assign) IBInspectable BOOL scrollEnabled;
 
 /**
  *  @author 蔚哥哥, 16-09-03 22:09:48
