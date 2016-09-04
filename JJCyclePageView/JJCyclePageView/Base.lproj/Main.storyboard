@@ -144,6 +144,7 @@
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="shouldAutoScroll" value="YES"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="scrollEnabled" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="shouldScrollForever" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>

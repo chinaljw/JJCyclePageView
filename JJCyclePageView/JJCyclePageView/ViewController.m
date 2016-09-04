@@ -71,12 +71,12 @@
 }
 
 #pragma mark - JJCyclePageViewDataSource
-- (NSUInteger)numberOfItem
+- (NSUInteger)numberOfItemForPageView:(JJCyclePageView *)pageView
 {
     return self.colorList.count;
 }
 
-- (void)configForCell:(__kindof UICollectionViewCell *)cell atIndex:(NSUInteger)index
+- (void)configCell:(__kindof UICollectionViewCell *)cell atIndex:(NSUInteger)index forPageView:(JJCyclePageView *)pageView
 {
     if (index % 2 == 0) {
         CollectionViewCell *testCell = cell;
@@ -92,18 +92,18 @@
     
 }
 
-- (NSString *)cellIdentifierAtIndex:(NSUInteger)index
+- (NSString *)cellIdentifierAtIndex:(NSUInteger)index forPageView:(JJCyclePageView *)pageView
 {
     return index % 2 == 0 ? @"cell" : @"otherCell";
 }
 
 #pragma mark - JJCyclePageViewDelegate
-- (void)didScrollToIndex:(NSUInteger)index
+- (void)didScrollToIndex:(NSUInteger)index forPageView:(JJCyclePageView *)pageView
 {
     NSLog(@"scroll to index %lul", index);
 }
 
-- (void)didSelectItemAtIndex:(NSUInteger)index
+- (void)didSelectItemAtIndex:(NSUInteger)index forPageView:(JJCyclePageView *)pageView
 {
     NSLog(@"select index %lul", index);
 }

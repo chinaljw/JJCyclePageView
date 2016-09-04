@@ -8,6 +8,8 @@
 
 #import "JJCyclePageView.h"
 
+#define DataSourceItemCount [self.dataSource numberOfItemForPageView:self]
+
 //默认identifier
 static NSString *const kDefaultCellIdentifier = @"kDefaultCellIdentifier";
 
@@ -86,6 +88,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     _autoScrollDirection = JJCyclePageViewAutoScrollDirectionAscending;
     _autoScrollTimeInterval = kDefaultautoScrollTimeInterval;
     _scrollEnabled = YES;
+    _shouldScrollForever = YES;
     [self addSubview:self.mainCollectionView];
 }
 
@@ -170,6 +173,12 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     self.mainCollectionView.scrollEnabled = _scrollEnabled;
 }
 
+- (void)setShouldScrollForever:(BOOL)shouldScrollForever
+{
+    _shouldScrollForever = shouldScrollForever;
+    [self reloadData];
+}
+
 #pragma mark - Public
 - (void)registerCellWithClass:(Class)cellClass identifier:(NSString *)identifier
 {
@@ -196,8 +205,8 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     [self.mainCollectionView reloadData];
     
     //如果当前输出的页码大于最大页码重置为最大页码
-    if (self.currentPageIndex > [self.dataSource numberOfItem] - 1) {
-        _currentPageIndex = [self.dataSource numberOfItem] - 1;
+    if (self.currentPageIndex > DataSourceItemCount - 1) {
+        _currentPageIndex = DataSourceItemCount - 1;
         [self scrollToIndex:self.currentPageIndex animated:NO];
     }
     
@@ -241,7 +250,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 //根据真实的index获取输出到外部的index
 - (NSUInteger)outputIndexForRealIndex:(NSUInteger)realIndex
 {
-    return realIndex == [self.dataSource numberOfItem] ? 0 : realIndex;
+    return realIndex == DataSourceItemCount ? 0 : realIndex;
 }
 
 //根据offset获取真实的index，区分滚动方向
@@ -282,7 +291,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 //判断是否能滚
 - (BOOL)canScroll
 {
-    return [self.dataSource numberOfItem] != 0 && !( !self.scrollAbleWhenOneCell && [self.dataSource numberOfItem] == 1);
+    return DataSourceItemCount != 0 && !( !self.scrollAbleWhenOneCell && DataSourceItemCount == 1);
 }
 
 //是否能自动滚
@@ -326,21 +335,38 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
         case JJCyclePageViewAutoScrollDirectionAscending:
         {
             nextPageIndex ++;
-            //如果处于真实的最后一个，且下一个是输出的第二个
-            if (_realPageIndex == [self.dataSource numberOfItem])
-            {
-                //移动到输出的第一个
-                self.mainCollectionView.contentOffset = [self contentOffsetForIndex:0];
+            
+            //如果应该滚到世界尽头
+            if (self.shouldScrollForever) {
+                //如果处于真实的最后一个，且下一个是输出的第二个
+                if (_realPageIndex == DataSourceItemCount)
+                {
+                    //移动到输出的第一个
+                    self.mainCollectionView.contentOffset = [self contentOffsetForIndex:0];
+                }
             }
+            else
+            {
+                if (nextPageIndex >= DataSourceItemCount) {
+                    nextPageIndex = 0;
+                }
+            }
+            
         }
             break;
         case JJCyclePageViewAutoScrollDirectionDescending:
         {
             //如果处于第一个
             if (self.currentPageIndex == 0) {
-                nextPageIndex = [self.dataSource numberOfItem] - 1;
-                //移动到真实的最后一个
-                self.mainCollectionView.contentOffset = [self contentOffsetForIndex:[self.dataSource numberOfItem]];
+                
+                nextPageIndex = DataSourceItemCount - 1;
+                
+                //如果应该滚到世界尽头
+                if (self.shouldScrollForever) {
+                    //移动到真实的最后一个
+                    self.mainCollectionView.contentOffset = [self contentOffsetForIndex:DataSourceItemCount];
+                }
+                
             }
             else
             {
@@ -361,9 +387,9 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    NSUInteger count = [self.dataSource numberOfItem];
-    //判断是否能滚
-    return [self canScroll] ? count + 1: count;
+    NSUInteger count = DataSourceItemCount;
+    //判断是否是无限滚动模式
+    return [self canScroll] && self.shouldScrollForever ? count + 1: count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -371,13 +397,13 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     NSUInteger outputIndex = [self outputIndexForRealIndex:indexPath.row];
     
     NSString *identifier = kDefaultCellIdentifier;
-    if ([self.dataSource respondsToSelector:@selector(cellIdentifierAtIndex:)]) {
-        identifier = [self.dataSource cellIdentifierAtIndex:outputIndex];
+    if ([self.dataSource respondsToSelector:@selector(cellIdentifierAtIndex:forPageView:)]) {
+        identifier = [self.dataSource cellIdentifierAtIndex:outputIndex forPageView:self];
     }
     
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     
-    [self.dataSource configForCell:cell atIndex:outputIndex];
+    [self.dataSource configCell:cell atIndex:outputIndex forPageView:self];
     
     return cell;
 }
@@ -391,55 +417,58 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     //设置真是的pageindex
     _realPageIndex = [self realIndexForContentOffset:scrollView.contentOffset];
     
-    switch (self.scrollDirection) {
-            //横向滚动
-        case JJCyclePageViewScrollDirectionHorizontal:
-        {
-            //往左滚到头
-            if (scrollView.contentOffset.x < 0.f) {
-                CGPoint contentOffset = [self contentOffsetForIndex:[self.dataSource numberOfItem]];
-                contentOffset.x += scrollView.contentOffset.x - 0.f;
-                scrollView.contentOffset = contentOffset;
-                return;
+    //如果应该滚到世界尽头
+    if (self.shouldScrollForever) {
+        switch (self.scrollDirection) {
+                //横向滚动
+            case JJCyclePageViewScrollDirectionHorizontal:
+            {
+                //往左滚到头
+                if (scrollView.contentOffset.x < 0.f) {
+                    CGPoint contentOffset = [self contentOffsetForIndex:DataSourceItemCount];
+                    contentOffset.x += scrollView.contentOffset.x - 0.f;
+                    scrollView.contentOffset = contentOffset;
+                    return;
+                }
+                //往右滚到头
+                if (scrollView.contentOffset.x > scrollView.contentSize.width - 1 * [self boundsWidth]) {
+                    CGPoint contentOffset = [self contentOffsetForIndex:0];
+                    contentOffset.x += scrollView.contentOffset.x - (scrollView.contentSize.width - 1 * [self boundsWidth]);
+                    scrollView.contentOffset = contentOffset;
+                    return;
+                }
             }
-            //往右滚到头
-            if (scrollView.contentOffset.x > scrollView.contentSize.width - 1 * [self boundsWidth]) {
-                CGPoint contentOffset = [self contentOffsetForIndex:0];
-                contentOffset.x += scrollView.contentOffset.x - (scrollView.contentSize.width - 1 * [self boundsWidth]);
-                scrollView.contentOffset = contentOffset;
-                return;
+                break;
+                //竖直滚动
+            case JJCyclePageViewScrollDirectionVertical:
+            {
+                //往上滚到头
+                if (scrollView.contentOffset.y < 0.f) {
+                    CGPoint contentOffset = [self contentOffsetForIndex:DataSourceItemCount];
+                    contentOffset.y += scrollView.contentOffset.y - 0.f;
+                    scrollView.contentOffset = contentOffset;
+                    return;
+                }
+                //往下滚到头
+                if (scrollView.contentOffset.y > scrollView.contentSize.height - 1 * [self boundsHeight]) {
+                    CGPoint contentOffset = [self contentOffsetForIndex:0];
+                    contentOffset.y += scrollView.contentOffset.y - (scrollView.contentSize.height - 1 * [self boundsHeight]);
+                    scrollView.contentOffset = contentOffset;
+                    return;
+                }
             }
+                break;
+            default:
+                break;
         }
-            break;
-            //竖直滚动
-        case JJCyclePageViewScrollDirectionVertical:
-        {
-            //往上滚到头
-            if (scrollView.contentOffset.y < 0.f) {
-                CGPoint contentOffset = [self contentOffsetForIndex:[self.dataSource numberOfItem]];
-                contentOffset.y += scrollView.contentOffset.y - 0.f;
-                scrollView.contentOffset = contentOffset;
-                return;
-            }
-            //往下滚到头
-            if (scrollView.contentOffset.y > scrollView.contentSize.height - 1 * [self boundsHeight]) {
-                CGPoint contentOffset = [self contentOffsetForIndex:0];
-                contentOffset.y += scrollView.contentOffset.y - (scrollView.contentSize.height - 1 * [self boundsHeight]);
-                scrollView.contentOffset = contentOffset;
-                return;
-            }
-        }
-            break;
-        default:
-            break;
     }
     
     //设置outputpageindex
     NSUInteger pageIndex = [self outputIndexForRealIndex:_realPageIndex];
     if (pageIndex != _currentPageIndex) {
         _currentPageIndex = pageIndex;
-        if ([self.delegate respondsToSelector:@selector(didScrollToIndex:)]) {
-            [self.delegate didScrollToIndex:pageIndex];
+        if ([self.delegate respondsToSelector:@selector(didScrollToIndex:forPageView:)]) {
+            [self.delegate didScrollToIndex:pageIndex forPageView:self];
         }
     }
 }
@@ -469,8 +498,8 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.delegate respondsToSelector:@selector(didSelectItemAtIndex:)]) {
-        [self.delegate didSelectItemAtIndex:[self outputIndexForRealIndex:indexPath.row]];
+    if ([self.delegate respondsToSelector:@selector(didSelectItemAtIndex:forPageView:)]) {
+        [self.delegate didSelectItemAtIndex:[self outputIndexForRealIndex:indexPath.row] forPageView:self];
     }
 }
 

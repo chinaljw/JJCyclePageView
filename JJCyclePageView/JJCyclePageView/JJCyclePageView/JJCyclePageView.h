@@ -48,6 +48,7 @@ typedef NS_ENUM(NSInteger, JJCyclePageViewAutoScrollDirection) {
     JJCyclePageViewAutoScrollDirectionDescending,
 };
 
+@class JJCyclePageView;
 /**
  *  @author 蔚哥哥, 16-09-03 22:09:11
  *
@@ -62,7 +63,7 @@ typedef NS_ENUM(NSInteger, JJCyclePageViewAutoScrollDirection) {
  *
  *  @return item数
  */
-- (NSUInteger)numberOfItem;
+- (NSUInteger)numberOfItemForPageView:(JJCyclePageView *)pageView;
 
 /**
  *  @author 蔚哥哥, 16-09-03 22:09:44
@@ -72,7 +73,7 @@ typedef NS_ENUM(NSInteger, JJCyclePageViewAutoScrollDirection) {
  *  @param cell  UICollectionViewCell
  *  @param index index
  */
-- (void)configForCell:(__kindof UICollectionViewCell *)cell atIndex:(NSUInteger)index;
+- (void)configCell:(__kindof UICollectionViewCell *)cell atIndex:(NSUInteger)index forPageView:(JJCyclePageView *)pageView;
 
 @optional;
 /**
@@ -84,7 +85,7 @@ typedef NS_ENUM(NSInteger, JJCyclePageViewAutoScrollDirection) {
  *
  *  @return index对应的identifier
  */
-- (NSString *)cellIdentifierAtIndex:(NSUInteger)index;
+- (NSString *)cellIdentifierAtIndex:(NSUInteger)index forPageView:(JJCyclePageView *)pageView;
 
 @end
 
@@ -103,7 +104,7 @@ typedef NS_ENUM(NSInteger, JJCyclePageViewAutoScrollDirection) {
  *
  *  @param index index
  */
-- (void)didScrollToIndex:(NSUInteger)index;
+- (void)didScrollToIndex:(NSUInteger)index forPageView:(JJCyclePageView *)pageView;
 
 /**
  *  @author 蔚哥哥, 16-09-03 22:09:12
@@ -112,7 +113,7 @@ typedef NS_ENUM(NSInteger, JJCyclePageViewAutoScrollDirection) {
  *
  *  @param index index
  */
-- (void)didSelectItemAtIndex:(NSUInteger)index;
+- (void)didSelectItemAtIndex:(NSUInteger)index forPageView:(JJCyclePageView *)pageView;
 
 @end
 
@@ -188,6 +189,13 @@ IB_DESIGNABLE
  *  是否能人为滚动，默认YES
  */
 @property (nonatomic, assign) IBInspectable BOOL scrollEnabled;
+
+/**
+ *  @author 蔚哥哥, 16-09-04 23:09:28
+ *
+ *  是否要滚到世界尽头
+ */
+@property (nonatomic, assign) IBInspectable BOOL shouldScrollForever;
 
 /**
  *  @author 蔚哥哥, 16-09-03 22:09:48
