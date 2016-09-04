@@ -76,11 +76,6 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     }
 }
 
-- (void)dealloc
-{
-    NSLog(@"dealloc %@", self);
-}
-
 #pragma mark - Initialize
 //初始化
 - (void)initSelf
