@@ -18,6 +18,12 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 {
     //真是pageIndex
     NSUInteger _realPageIndex;
+    //是否在滚
+    BOOL _isScrolling;
+    //是否等待改变滚动方向
+    BOOL _isWaitingToChangeScrollDirection;
+    //临时方向
+    JJCyclePageViewScrollDirection _tempDirection;
 }
 
 @property (nonatomic, strong) UICollectionView *mainCollectionView;
@@ -59,7 +65,6 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     if ([self canAutoScroll]) {
         [self beginAutoScroll];
     }
-    
 }
 
 - (void)dealloc
@@ -101,6 +106,12 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 
 - (void)setScrollDirection:(JJCyclePageViewScrollDirection)scrollDirection
 {
+    //为了处理滚动时换方向的问题
+    if (scrollDirection != _scrollDirection && _isScrolling) {
+        _isWaitingToChangeScrollDirection = YES;
+        _tempDirection = scrollDirection;
+        return;
+    }
     _scrollDirection = scrollDirection;
     [(UICollectionViewFlowLayout *)self.mainCollectionView.collectionViewLayout
      setScrollDirection:scrollDirection == JJCyclePageViewScrollDirectionHorizontal ? UICollectionViewScrollDirectionHorizontal : UICollectionViewScrollDirectionVertical];
@@ -145,10 +156,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     _autoScrollTimeInterval = autoScrollTimeInterval;
     if ([self canAutoScroll]) {
         //设置时间后要重新生成timer
-        if (_timer) {
-            [self endAutoScroll];
-            [self beginAutoScroll];
-        }
+        [self restartAutoScroll];
     }
 }
 
@@ -286,6 +294,31 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     return self.shouldAutoScroll && self.window && [self canScroll];
 }
 
+//重启自动滚动
+- (void)restartAutoScroll
+{
+    if (_timer) {
+        [self endAutoScroll];
+        [self beginAutoScroll];
+    }
+}
+
+//结束滚动时的处理
+- (void)handleScrollingEnd
+{
+    _isScrolling = NO;
+    if (_isWaitingToChangeScrollDirection) {
+        self.scrollDirection = _tempDirection;
+        _isWaitingToChangeScrollDirection = NO;
+    }
+}
+
+//处理滚动开始
+- (void)handleScrolling
+{
+    _isScrolling = YES;
+}
+
 #pragma mark - TimerAction
 - (void)didTimeGo:(NSTimer *)timer
 {
@@ -354,6 +387,9 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 #pragma mark - UICollectionViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    
+    [self handleScrolling];
+    
     //设置真是的pageindex
     _realPageIndex = [self realIndexForContentOffset:scrollView.contentOffset];
     
@@ -422,6 +458,15 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     if ([self canAutoScroll]) {
         [self beginAutoScroll];
     }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self handleScrollingEnd];
+}
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    [self handleScrollingEnd];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath

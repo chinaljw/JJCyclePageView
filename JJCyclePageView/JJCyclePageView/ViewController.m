@@ -133,4 +133,12 @@
     [self.pageView reloadData];
 }
 
+- (IBAction)didChangeValue:(UISwitch *)sender {
+    
+    self.pageView.scrollDirection = sender.isOn ? JJCyclePageViewScrollDirectionVertical : JJCyclePageViewScrollDirectionHorizontal;
+    
+}
+- (IBAction)didChangeAutoScrollValue:(UISwitch *)sender {
+    self.pageView.autoScrollDirection = sender.on ? JJCyclePageViewAutoScrollDirectionDescending : JJCyclePageViewAutoScrollDirectionAscending;
+}
 @end
