@@ -1,5 +1,7 @@
 # JJCyclePageView
 一个能滚到世界尽头的PageView
+# CocoaPods
+pod 'JJCyclePageView', '~> 1.0.0'
 # 功能
 <br>可以横着滚
 <br>也能竖着滚
