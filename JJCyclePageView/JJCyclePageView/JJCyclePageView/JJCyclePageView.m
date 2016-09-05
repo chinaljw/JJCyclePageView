@@ -257,7 +257,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 //根据offset获取真实的index，区分滚动方向
 - (NSUInteger)realIndexForContentOffset:(CGPoint)contentOffset
 {
-    return self.scrollDirection == JJCyclePageViewScrollDirectionHorizontal ? contentOffset.x / [self boundsWidth] : contentOffset.y / [self boundsHeight];
+    return self.scrollDirection == JJCyclePageViewScrollDirectionHorizontal ? round(contentOffset.x / [self boundsWidth]) : round(contentOffset.y / [self boundsHeight]);
 }
 
 //单位宽

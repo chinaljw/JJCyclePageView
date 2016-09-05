@@ -179,7 +179,7 @@ IB_DESIGNABLE
 /**
  *  @author 蔚哥哥, 16-09-03 20:09:06
  *
- *  自动滚动的时间间隔，默认3秒
+ *  自动滚动的时间间隔，默认5秒
  */
 @property (nonatomic, assign) IBInspectable CGFloat autoScrollTimeInterval;
 
