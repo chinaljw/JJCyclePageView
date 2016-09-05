@@ -172,7 +172,7 @@ IB_DESIGNABLE
 /**
  *  @author 蔚哥哥, 16-09-03 20:09:57
  *
- *  自动滚动的方向，默认Right
+ *  自动滚动的方向，默认 JJCyclePageViewAutoScrollDirectionAscending
  */
 @property (nonatomic, assign) JJCyclePageViewAutoScrollDirection autoScrollDirection;
 

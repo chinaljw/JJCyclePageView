@@ -107,6 +107,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
         _mainCollectionView.pagingEnabled = YES;
         _mainCollectionView.showsVerticalScrollIndicator = NO;
         _mainCollectionView.showsHorizontalScrollIndicator = NO;
+        _mainCollectionView.scrollsToTop = NO;
     }
     return _mainCollectionView;
 }
