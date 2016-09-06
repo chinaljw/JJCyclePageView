@@ -58,7 +58,13 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 {
     [super layoutSubviews];
     
+    //兼容横竖屏切换
+    [self.mainCollectionView.collectionViewLayout invalidateLayout];
+    
     self.mainCollectionView.frame = self.bounds;
+    
+    //调整位置
+    [self scrollToIndex:self.currentPageIndex animated:NO];
 }
 
 //视图消失时停止计时器，否则无法释放
@@ -299,7 +305,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 - (BOOL)canAutoScroll
 {
     //要自动滚 & 出现在window上 & 能滚
-    return self.shouldAutoScroll && self.window && [self canScroll] && self.autoScrollTimeInterval != 0;
+    return self.shouldAutoScroll && self.window && [self canScroll] && self.autoScrollTimeInterval > 0;
 }
 
 //重启自动滚动
