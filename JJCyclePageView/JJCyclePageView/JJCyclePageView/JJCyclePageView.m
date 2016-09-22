@@ -213,9 +213,18 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 - (void)reloadData
 {
     [self.mainCollectionView reloadData];
+    NSLog(@"%zd", DataSourceItemCount);
     
+    //数据为空重置
+    if (DataSourceItemCount == 0) {
+        _currentPageIndex = 0;
+        _realPageIndex = 0;
+        _isScrolling = NO;
+        _isWaitingToChangeScrollDirection = NO;
+        [self.mainCollectionView setContentOffset:CGPointZero animated:NO];
+    }
     //如果当前输出的页码大于最大页码重置为最大页码
-    if (self.currentPageIndex > DataSourceItemCount - 1) {
+    else if (self.currentPageIndex > DataSourceItemCount - 1) {
         _currentPageIndex = DataSourceItemCount - 1;
         [self scrollToIndex:self.currentPageIndex animated:NO];
     }
@@ -422,13 +431,14 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     
+    //如果没有数据就不进行位置调整
     if (DataSourceItemCount <= 0) {
         return;
     }
     
     [self handleScrolling];
     
-    //设置真是的pageindex
+    //设置真实的pageindex
     _realPageIndex = [self realIndexForContentOffset:scrollView.contentOffset];
     
     //如果应该滚到世界尽头
