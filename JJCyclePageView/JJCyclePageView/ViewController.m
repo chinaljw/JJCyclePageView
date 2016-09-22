@@ -25,13 +25,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    self.colorList = @[
-                       [UIColor orangeColor],
-                       [UIColor whiteColor],
-                       [UIColor greenColor],
-                       [UIColor blueColor],
-                       [UIColor grayColor],
-                       ];
+//    self.colorList = @[
+//                       [UIColor orangeColor],
+//                       [UIColor whiteColor],
+//                       [UIColor greenColor],
+//                       [UIColor blueColor],
+//                       [UIColor grayColor],
+//                       ];
+    
+    self.colorList = @[];
     
 //    [self.view addSubview:self.pageView];
     
@@ -132,6 +134,7 @@
                            [UIColor grayColor],
                            ];
     }
+//    self.colorList = @[];
     [self.pageView reloadData];
 }
 

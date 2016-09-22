@@ -63,8 +63,11 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     
     self.mainCollectionView.frame = self.bounds;
     
-    //调整位置
-    [self scrollToIndex:self.currentPageIndex animated:NO];
+    if (DataSourceItemCount > 0) {
+        //调整位置
+        [self scrollToIndex:self.currentPageIndex animated:NO];
+    }
+
 }
 
 //视图消失时停止计时器，否则无法释放
@@ -418,6 +421,10 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 #pragma mark - UICollectionViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    
+    if (DataSourceItemCount <= 0) {
+        return;
+    }
     
     [self handleScrolling];
     
