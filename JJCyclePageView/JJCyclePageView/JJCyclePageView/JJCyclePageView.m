@@ -237,7 +237,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     
     //判断是否能够自动滚能的话开启，不能的话关闭
     if ([self canAutoScroll]) {
-        [self beginAutoScroll];
+        [self restartAutoScroll];
     }
     else
     {
@@ -281,13 +281,13 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 //单位宽
 - (CGFloat)boundsWidth
 {
-    return self.mainCollectionView.bounds.size.width;
+    return floor(self.mainCollectionView.bounds.size.width);
 }
 
 //单位高
 - (CGFloat)boundsHeight
 {
-    return self.mainCollectionView.bounds.size.height;
+    return floor(self.mainCollectionView.bounds.size.height);
 }
 
 //开始自动滚
@@ -325,6 +325,10 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 {
     if (_timer) {
         [self endAutoScroll];
+        [self beginAutoScroll];
+    }
+    else
+    {
         [self beginAutoScroll];
     }
 }
