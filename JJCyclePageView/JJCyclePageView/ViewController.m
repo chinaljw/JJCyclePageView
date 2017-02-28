@@ -39,6 +39,8 @@
     
     [self configPageView];
     
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"next" style:UIBarButtonItemStylePlain target:self action:@selector(didClickNextItem:)];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -143,4 +145,12 @@
 - (IBAction)didChangeAutoScrollValue:(UISwitch *)sender {
     self.pageView.autoScrollDirection = sender.on ? JJCyclePageViewAutoScrollDirectionDescending : JJCyclePageViewAutoScrollDirectionAscending;
 }
+
+- (void)didClickNextItem:(UIBarButtonItem *)barButtonItem
+{
+    UIViewController *vc = [UIViewController new];
+    vc.view.backgroundColor = [UIColor whiteColor];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 @end

@@ -436,7 +436,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 {
     
     //如果没有数据就不进行位置调整
-    if (DataSourceItemCount <= 0) {
+    if (DataSourceItemCount <= 0 || scrollView.contentSize.width < [self boundsWidth] || scrollView.contentSize.height < [self boundsHeight] ) {
         return;
     }
     
