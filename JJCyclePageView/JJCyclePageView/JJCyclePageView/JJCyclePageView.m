@@ -81,7 +81,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 - (void)didMoveToWindow
 {
     [super didMoveToWindow];
-    _isVisible = self.window;
+    _isVisible = self.window != nil;
     if (self.window) {
         if ([self canAutoScroll]) {
             [self beginAutoScroll];
@@ -355,6 +355,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     _isScrolling = YES;
 }
 
+//当离开界面时如果scrollview还在滚动会调用这个方法来调整contentoffset至文雅的位置
 - (void)adjustOffsetForViewUnvisible
 {
     CGPoint offset = self.mainCollectionView.contentOffset;
@@ -466,7 +467,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 #pragma mark - UICollectionViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    
+    //如果视图不可见，就调整位置
     if (!_isVisible) {
         [self adjustOffsetForViewUnvisible];
         return;
