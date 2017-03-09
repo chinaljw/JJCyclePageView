@@ -26,6 +26,8 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     BOOL _isWaitingToChangeScrollDirection;
     //临时方向
     JJCyclePageViewScrollDirection _tempDirection;
+    //是否可见
+    BOOL _isVisible;
 }
 
 @property (nonatomic, strong) UICollectionView *mainCollectionView;
@@ -54,6 +56,11 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     return self;
 }
 
+- (void)dealloc
+{
+    NSLog(@"dealloc %@", self);
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -70,21 +77,21 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 
 }
 
-//视图消失时停止计时器，否则无法释放
-- (void)removeFromSuperview
-{
-    [super removeFromSuperview];
-    [self endAutoScroll];
-}
-
 //当视图出现时判断是否要自动滚
 - (void)didMoveToWindow
 {
     [super didMoveToWindow];
-    
-    if ([self canAutoScroll]) {
-        [self beginAutoScroll];
+    _isVisible = self.window;
+    if (self.window) {
+        if ([self canAutoScroll]) {
+            [self beginAutoScroll];
+        }
     }
+    else
+    {
+        [self endAutoScroll];
+    }
+    
 }
 
 #pragma mark - Initialize
@@ -93,7 +100,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 {
     _scrollDirection = JJCyclePageViewScrollDirectionHorizontal;
     _pagingEnabled = YES;
-    _scrollAbleWhenOneCell = YES;
+    _oneCellScrollEnabled = YES;
     _autoScrollDirection = JJCyclePageViewAutoScrollDirectionAscending;
     _autoScrollTimeInterval = kDefaultautoScrollTimeInterval;
     _scrollEnabled = YES;
@@ -140,9 +147,9 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
     self.mainCollectionView.pagingEnabled = _pagingEnabled;
 }
 
-- (void)setScrollAbleWhenOneCell:(BOOL)scrollAbleWhenOneCell
+- (void)setOneCellScrollEnabled:(BOOL)oneCellScrollEnabled
 {
-    _scrollAbleWhenOneCell = scrollAbleWhenOneCell;
+    _oneCellScrollEnabled = oneCellScrollEnabled;
     //设置完后重新加载才起作用，暂时这样吧
     [self reloadData];
 }
@@ -213,7 +220,6 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 - (void)reloadData
 {
     [self.mainCollectionView reloadData];
-    NSLog(@"%zd", DataSourceItemCount);
     
     //数据为空重置
     if (DataSourceItemCount == 0) {
@@ -310,7 +316,7 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 //判断是否能滚
 - (BOOL)canScroll
 {
-    return DataSourceItemCount != 0 && !( !self.scrollAbleWhenOneCell && DataSourceItemCount == 1);
+    return DataSourceItemCount != 0 && !( !self.oneCellScrollEnabled && DataSourceItemCount == 1);
 }
 
 //是否能自动滚
@@ -347,6 +353,32 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 - (void)handleScrolling
 {
     _isScrolling = YES;
+}
+
+- (void)adjustOffsetForViewUnvisible
+{
+    CGPoint offset = self.mainCollectionView.contentOffset;
+    switch (self.scrollDirection) {
+        case JJCyclePageViewScrollDirectionHorizontal:
+        {
+            CGFloat fitX = round(offset.x / [self boundsWidth]) * [self boundsWidth];
+            if (offset.x != fitX) {
+                offset.x = fitX;
+            }
+        }
+            break;
+        case JJCyclePageViewScrollDirectionVertical:
+        {
+            CGFloat fitY = round(offset.y / [self boundsHeight]) * [self boundsHeight];
+            if (offset.y != fitY) {
+                offset.y = fitY;
+            }
+        }
+            break;
+        default:
+            break;
+    }
+    self.mainCollectionView.contentOffset = offset;
 }
 
 #pragma mark - TimerAction
@@ -434,6 +466,11 @@ static CGFloat const kDefaultautoScrollTimeInterval = 5.f;
 #pragma mark - UICollectionViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    
+    if (!_isVisible) {
+        [self adjustOffsetForViewUnvisible];
+        return;
+    }
     
     //如果没有数据就不进行位置调整
     if (DataSourceItemCount <= 0 || scrollView.contentSize.width < [self boundsWidth] || scrollView.contentSize.height < [self boundsHeight] ) {

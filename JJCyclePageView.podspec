@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "JJCyclePageView"
-  s.version      = "1.0.6"
+  s.version      = "1.0.7"
   s.summary      = "一个能滚到世界尽头的PageView"
 
   s.description  = "scroll scroll scroll to the end"
@@ -72,7 +72,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/chinaljw/JJCyclePageView.git", :tag => "1.0.6" }
+  s.source       = { :git => "https://github.com/chinaljw/JJCyclePageView.git", :tag => "1.0.7" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

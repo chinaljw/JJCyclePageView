@@ -149,6 +149,8 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="shouldAutoScroll" value="YES"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="scrollEnabled" value="YES"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="shouldScrollForever" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="oneCellScrollEnable" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="oneCellScrollEnabled" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="DcE-wv-yOg"/>

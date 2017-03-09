@@ -153,7 +153,7 @@ IB_DESIGNABLE
  *
  *  只有一个cell时是否能滚动，默认YES（设置后会重新加载数据）
  */
-@property (nonatomic, assign) IBInspectable BOOL scrollAbleWhenOneCell;
+@property (nonatomic, assign) IBInspectable BOOL oneCellScrollEnabled;
 
 /**
  *  @author 蔚哥哥, 16-09-03 20:09:15
